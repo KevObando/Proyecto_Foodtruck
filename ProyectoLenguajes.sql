@@ -13,9 +13,128 @@ add primary key (ID_Cliente);
 CREATE TABLE EMPLEADO (
     ID_Empleado INT PRIMARY KEY,
     Nombre_Empleado VARCHAR2(80),
+    Apellido_Empleado  VARCHAR2(80),
     Tipo_Empleado VARCHAR2(20),
-    Contraseña VARCHAR2(20)
+    Contraseña VARCHAR2(20),
+    fecha_creacion DATE,
+    creado_por VARCHAR2(80),
+    modificado_por VARCHAR2(80),
+    fecha_actualizacion DATE    
 );
+
+---Agrega las nuevas filas
+ALTER TABLE EMPLEADO
+ADD (FECHA_CREACION DATE);
+
+ALTER TABLE EMPLEADO
+ADD (CREADO_POR VARCHAR2(100));
+
+ALTER TABLE EMPLEADO
+ADD (MODIFICADO_POR VARCHAR2(100),
+     FECHA_ACTUALIZACION DATE);
+     
+--- Creacion tabla log_empleado para llevar registro de update o delete 
+CREATE TABLE log_empleado (
+  id_log INT PRIMARY KEY,
+  accion VARCHAR2(10),
+  usuario VARCHAR2(100),
+  fecha DATE,
+  id_registro INT
+);
+     
+--- Triggers para la tabla EMPLEADO
+
+--- Fecha de aztualizacion..
+CREATE OR REPLACE TRIGGER trg_empleado_fecha_creacion
+BEFORE INSERT ON EMPLEADO
+FOR EACH ROW
+BEGIN
+  :new.fecha_creacion := SYSDATE;
+END;
+
+--- Creado por..
+CREATE OR REPLACE TRIGGER trg_empleado_creado_por
+BEFORE INSERT ON EMPLEADO
+FOR EACH ROW
+BEGIN
+  :new.creado_por := USER;
+END;
+
+--- modificado por..
+CREATE OR REPLACE TRIGGER trg_empleado_modificado_por
+BEFORE UPDATE ON empleado
+FOR EACH ROW
+BEGIN
+  :new.modificado_por := USER;
+END;
+
+--- Fecha de actualizacion
+CREATE OR REPLACE TRIGGER trg_empleado_fecha_actualizacion
+BEFORE UPDATE ON empleado
+FOR EACH ROW
+BEGIN
+  :new.fecha_actualizacion := SYSDATE;
+END;
+
+--- Registro si se hace un update o delete
+CREATE OR REPLACE TRIGGER trg_empleado_update_delete
+AFTER UPDATE OR DELETE ON empleado
+FOR EACH ROW
+DECLARE
+    v_usuario varchar2(10);
+    v_accion varchar2(50);
+BEGIN
+    SELECT user INTO v_usuario FROM dual;  
+    IF UPDATING THEN
+        v_accion := 'UPDATE';
+    ELSIF DELETING THEN
+        v_accion := 'DELETE';
+    END IF;
+      -- Insertar en la tabla de log
+    INSERT INTO log_empleado(accion, usuario, fecha, id_registro)
+    VALUES ( v_accion,v_usuario, SYSDATE, :OLD.id_empleado);
+END;
+  
+---Procedimiento almacenado para insertar registros a la tabla empleados      
+CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
+BEGIN
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  VALUES (101, 'Jose', 'Perez', 'Cocinero', 'Contrasena1');
+
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  VALUES (102, 'Maria', 'Gonzales', 'Cajera', 'Contrasena2');
+
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  VALUES (103, 'Carlos', 'Martinez', 'Gerente', 'Contrasena3');
+
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  VALUES (104, 'Ana', 'Leal', 'Asistente', 'Contrasena4');
+
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  VALUES (105, 'Marcos', 'Zamora', 'Repartidor', 'Contrasena5');
+
+  COMMIT;
+  
+  DBMS_OUTPUT.PUT_LINE('Los datos se han llenado correctamente.');
+END;
+/
+SET SERVEROUTPUT ON;
+Execute p_llenar_empleados;
+
+---Procedimiento de consulta a la Tabla empleados
+
+CREATE OR REPLACE PROCEDURE p_consultar_empleados(k_cursor OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN k_cursor FOR SELECT * FROM EMPLEADO;
+END;
+/
+VAR my_cursor REFCURSOR;
+EXEC p_consultar_empleados(:my_cursor);
+PRINT my_cursor;
+
+
+
+     
 
 -- Crear la tabla PRODUCTO
 CREATE TABLE PRODUCTO (
@@ -62,4 +181,3 @@ CREATE TABLE PEDIDO_PRODUCTO (
     FOREIGN KEY (ID_Pedido) REFERENCES PEDIDO(ID_Pedido),
     FOREIGN KEY (ID_Producto) REFERENCES PRODUCTO(ID_Producto)
 );
-
