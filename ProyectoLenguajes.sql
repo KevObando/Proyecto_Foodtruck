@@ -1,5 +1,5 @@
---Se crean las tablas para el proyecto de Lenguajes de programación.
---Creación de la tabla CLIENTE
+--Se crean las tablas para el proyecto de Lenguajes de programaciÃ³n.
+--CreaciÃ³n de la tabla CLIENTE
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
 Telefono_Cliente varchar(10),
@@ -15,7 +15,7 @@ CREATE TABLE EMPLEADO (
     Nombre_Empleado VARCHAR2(80),
     Apellido_Empleado  VARCHAR2(80),
     Tipo_Empleado VARCHAR2(20),
-    Contraseña VARCHAR2(20),
+    ContraseÃ±a VARCHAR2(20),
     fecha_creacion DATE,
     creado_por VARCHAR2(80),
     modificado_por VARCHAR2(80),
@@ -98,19 +98,19 @@ END;
 ---Procedimiento almacenado para insertar registros a la tabla empleados      
 CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
 BEGIN
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
   VALUES (101, 'Jose', 'Perez', 'Cocinero', 'Contrasena1');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
   VALUES (102, 'Maria', 'Gonzales', 'Cajera', 'Contrasena2');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
   VALUES (103, 'Carlos', 'Martinez', 'Gerente', 'Contrasena3');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
   VALUES (104, 'Ana', 'Leal', 'Asistente', 'Contrasena4');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
   VALUES (105, 'Marcos', 'Zamora', 'Repartidor', 'Contrasena5');
 
   COMMIT;
@@ -154,7 +154,7 @@ CREATE TABLE PEDIDO (
     ID_Empleado INT
     );
 
---Creación de las tablas foráneas para la tabla PEDIDO
+--CreaciÃ³n de las tablas forÃ¡neas para la tabla PEDIDO
 ALTER TABLE PEDIDO
 ADD CONSTRAINT pk_id_cliente
 FOREIGN KEY (ID_Cliente)
@@ -181,3 +181,5 @@ CREATE TABLE PEDIDO_PRODUCTO (
     FOREIGN KEY (ID_Pedido) REFERENCES PEDIDO(ID_Pedido),
     FOREIGN KEY (ID_Producto) REFERENCES PRODUCTO(ID_Producto)
 );
+
+
