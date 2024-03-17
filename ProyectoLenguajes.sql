@@ -1,5 +1,5 @@
 --Se crean las tablas para el proyecto de Lenguajes de programación.
---Creación de la tabla CLIENTE
+--Creaci�n de la tabla CLIENTE
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
 Telefono_Cliente varchar(10),
@@ -44,12 +44,16 @@ CREATE TABLE log_empleado (
      
 --- Triggers para la tabla EMPLEADO
 
+
+
+
+
 --- Fecha de aztualizacion..
 CREATE OR REPLACE TRIGGER trg_empleado_fecha_creacion
 BEFORE INSERT ON EMPLEADO
 FOR EACH ROW
 BEGIN
-  :new.fecha_creacion := SYSDATE;
+  :new.fecha_creacion:= SYSDATE;
 END;
 
 --- Creado por..
@@ -132,9 +136,6 @@ VAR my_cursor REFCURSOR;
 EXEC p_consultar_empleados(:my_cursor);
 PRINT my_cursor;
 
-
-
-     
 
 -- Crear la tabla PRODUCTO
 CREATE TABLE PRODUCTO (
