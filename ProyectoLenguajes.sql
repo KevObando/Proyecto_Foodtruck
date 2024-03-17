@@ -1,5 +1,7 @@
 --Se crean las tablas para el proyecto de Lenguajes de programaciÃ³n.
---CreaciÃ³n de la tabla CLIENTE
+--Creación de la tabla CLIENTE
+---Prueba de sincronización Github
+
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
 Telefono_Cliente varchar(10),
@@ -43,6 +45,10 @@ CREATE TABLE log_empleado (
 );
      
 --- Triggers para la tabla EMPLEADO
+
+
+
+
 
 --- Fecha de aztualizacion..
 CREATE OR REPLACE TRIGGER trg_empleado_fecha_creacion
@@ -132,9 +138,6 @@ VAR my_cursor REFCURSOR;
 EXEC p_consultar_empleados(:my_cursor);
 PRINT my_cursor;
 
-
-
-     
 
 -- Crear la tabla PRODUCTO
 CREATE TABLE PRODUCTO (
