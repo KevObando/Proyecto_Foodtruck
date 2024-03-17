@@ -58,7 +58,7 @@ CREATE OR REPLACE TRIGGER trg_empleado_fecha_creacion
 BEFORE INSERT ON EMPLEADO
 FOR EACH ROW
 BEGIN
-  :new.fecha_creacion:= SYSDATE;
+  :new.fecha_creacion := SYSDATE;
 END;
 
 --- Creado por..
