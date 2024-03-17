@@ -11,13 +11,16 @@ Direccion_Cliente varchar(100));
 ALTER TABLE CLIENTE
 add primary key (ID_Cliente);
 
+
+DROP TABLE EMPLEADO;
+
 -- Crear la tabla EMPLEADO
 CREATE TABLE EMPLEADO (
     ID_Empleado INT PRIMARY KEY,
     Nombre_Empleado VARCHAR2(80),
     Apellido_Empleado  VARCHAR2(80),
     Tipo_Empleado VARCHAR2(20),
-    ContraseÃ±a VARCHAR2(20),
+    Contraseña VARCHAR2(20),
     fecha_creacion DATE,
     creado_por VARCHAR2(80),
     modificado_por VARCHAR2(80),
@@ -26,14 +29,14 @@ CREATE TABLE EMPLEADO (
 
 ---Agrega las nuevas filas
 ALTER TABLE EMPLEADO
-ADD (FECHA_CREACION DATE);
+ADD Apellido_Empleado  VARCHAR2(80)
+ADD  fecha_creacion DATE
+ADD creado_por VARCHAR2(80)
+ADD modificado_por VARCHAR2(80)
+ADD fecha_actualizacion DATE    
+;
 
-ALTER TABLE EMPLEADO
-ADD (CREADO_POR VARCHAR2(100));
 
-ALTER TABLE EMPLEADO
-ADD (MODIFICADO_POR VARCHAR2(100),
-     FECHA_ACTUALIZACION DATE);
      
 --- Creacion tabla log_empleado para llevar registro de update o delete 
 CREATE TABLE log_empleado (
@@ -104,19 +107,19 @@ END;
 ---Procedimiento almacenado para insertar registros a la tabla empleados      
 CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
 BEGIN
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
   VALUES (101, 'Jose', 'Perez', 'Cocinero', 'Contrasena1');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
   VALUES (102, 'Maria', 'Gonzales', 'Cajera', 'Contrasena2');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
   VALUES (103, 'Carlos', 'Martinez', 'Gerente', 'Contrasena3');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
   VALUES (104, 'Ana', 'Leal', 'Asistente', 'Contrasena4');
 
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, ContraseÃ±a)
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña)
   VALUES (105, 'Marcos', 'Zamora', 'Repartidor', 'Contrasena5');
 
   COMMIT;
@@ -126,6 +129,9 @@ END;
 /
 SET SERVEROUTPUT ON;
 Execute p_llenar_empleados;
+
+select * from EMPLEADO;
+
 
 ---Procedimiento de consulta a la Tabla empleados
 
