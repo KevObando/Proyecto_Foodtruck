@@ -1,6 +1,5 @@
 --Se crean las tablas para el proyecto de Lenguajes de programaciÃ³n.
 --Creación de la tabla CLIENTE
----Prueba de sincronización Github
 
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
@@ -20,89 +19,113 @@ CREATE TABLE EMPLEADO (
     Nombre_Empleado VARCHAR2(80),
     Apellido_Empleado  VARCHAR2(80),
     Tipo_Empleado VARCHAR2(20),
-    Contraseña VARCHAR2(20),
-    fecha_creacion DATE,
-    creado_por VARCHAR2(80),
-    modificado_por VARCHAR2(80),
-    fecha_actualizacion DATE    
+    Contraseña VARCHAR2(20)
 );
 
----Agrega las nuevas filas
-ALTER TABLE EMPLEADO
-ADD Apellido_Empleado  VARCHAR2(80)
-ADD  fecha_creacion DATE
-ADD creado_por VARCHAR2(80)
-ADD modificado_por VARCHAR2(80)
-ADD fecha_actualizacion DATE    
-;
+CREATE TABLE EMPLEADO_FUNCIONES
+--ID_Empleado INT FOREING KEY,     hacer inner join de la tabla empleado con empleado_funciones
+ID_Empleado_Funciones INT PRIMARY KEY,
+Funciones VARCHAR(50);
 
 
+
+ALTER TABLE EMPLEADO      ---terminar alter table
+ADD HORARIO VARCHAR(50),
+ADD ASISTENCIA
+  
      
---- Creacion tabla log_empleado para llevar registro de update o delete 
-CREATE TABLE log_empleado (
-  id_log INT PRIMARY KEY,
-  accion VARCHAR2(10),
-  usuario VARCHAR2(100),
-  fecha DATE,
-  id_registro INT
+-------------------------------------------TRIGGERS-------------------------------------
+--- Trigger de insert y delete de la tabla empleado
+
+CREATE TABLE trg_empleado_Insercion_Eliminacion (
+    fecha_creacion     TIMESTAMP,
+    creado_por         VARCHAR2(100),
+    modificado_por     VARCHAR2(100),
+    fecha_actualizacion TIMESTAMP,
+    accion             VARCHAR2(10)
 );
-     
---- Triggers para la tabla EMPLEADO
 
-
-
-
-
---- Fecha de aztualizacion..
-CREATE OR REPLACE TRIGGER trg_empleado_fecha_creacion
-BEFORE INSERT ON EMPLEADO
+CREATE OR REPLACE TRIGGER trg_empleado_Insercion_Eliminacion
+BEFORE INSERT OR DELETE ON EMPLEADO
 FOR EACH ROW
 BEGIN
-  :new.fecha_creacion := SYSDATE;
-END;
-
---- Creado por..
-CREATE OR REPLACE TRIGGER trg_empleado_creado_por
-BEFORE INSERT ON EMPLEADO
-FOR EACH ROW
-BEGIN
-  :new.creado_por := USER;
-END;
-
---- modificado por..
-CREATE OR REPLACE TRIGGER trg_empleado_modificado_por
-BEFORE UPDATE ON empleado
-FOR EACH ROW
-BEGIN
-  :new.modificado_por := USER;
-END;
-
---- Fecha de actualizacion
-CREATE OR REPLACE TRIGGER trg_empleado_fecha_actualizacion
-BEFORE UPDATE ON empleado
-FOR EACH ROW
-BEGIN
-  :new.fecha_actualizacion := SYSDATE;
-END;
-
---- Registro si se hace un update o delete
-CREATE OR REPLACE TRIGGER trg_empleado_update_delete
-AFTER UPDATE OR DELETE ON empleado
-FOR EACH ROW
-DECLARE
-    v_usuario varchar2(10);
-    v_accion varchar2(50);
-BEGIN
-    SELECT user INTO v_usuario FROM dual;  
-    IF UPDATING THEN
-        v_accion := 'UPDATE';
-    ELSIF DELETING THEN
-        v_accion := 'DELETE';
+    IF INSERTING THEN
+        INSERT INTO trg_empleado_Insercion_Eliminacion(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'INSERT');
     END IF;
-      -- Insertar en la tabla de log
-    INSERT INTO log_empleado(accion, usuario, fecha, id_registro)
-    VALUES ( v_accion,v_usuario, SYSDATE, :OLD.id_empleado);
+    
+    IF DELETING THEN
+        INSERT INTO trg_empleado_Insercion_Eliminacion(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'DELETE');
+    END IF;
 END;
+/
+
+--- Trigger de update de la tabla empleado
+CREATE TABLE trg_empleado_Update (
+    fecha_creacion     TIMESTAMP,
+    creado_por         VARCHAR2(100),
+    modificado_por     VARCHAR2(100),
+    fecha_actualizacion TIMESTAMP,
+    accion             VARCHAR2(10)
+);
+
+CREATE OR REPLACE TRIGGER trg_empleado_Update
+BEFORE UPDATE ON EMPLEADO
+FOR EACH ROW
+BEGIN
+        INSERT INTO trg_empleado_Update(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'UPDATE');
+END;
+/
+
+--------Triggers tabla cliente
+
+CREATE TABLE trg_cliente_Insercion_Eliminacion_update (
+    fecha_creacion     TIMESTAMP,
+    creado_por         VARCHAR2(100),
+    modificado_por     VARCHAR2(100),
+    fecha_actualizacion TIMESTAMP,
+    accion             VARCHAR2(10)
+);
+
+CREATE OR REPLACE TRIGGER trg_cliente_Insercion_Eliminacion_update
+BEFORE INSERT OR DELETE OR UPDATE ON CLIENTE
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO trg_cliente_Insercion_Eliminacion_update(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'INSERT');
+     ELSIF DELETING THEN
+        INSERT INTO trg_cliente_Insercion_Eliminacion_update(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'DELETE');
+    ELSIF UPDATING THEN
+        INSERT INTO trg_cliente_Insercion_Eliminacion_update(fecha_creacion, creado_por, modificado_por, fecha_actualizacion, accion)
+        VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'UPDATE');
+    END IF;
+END;
+/
+
+-------Triggers tabla 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
 ---Procedimiento almacenado para insertar registros a la tabla empleados      
 CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
@@ -130,7 +153,7 @@ END;
 SET SERVEROUTPUT ON;
 Execute p_llenar_empleados;
 
-select * from EMPLEADO;
+
 
 
 ---Procedimiento de consulta a la Tabla empleados
