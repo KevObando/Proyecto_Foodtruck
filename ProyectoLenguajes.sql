@@ -1,5 +1,7 @@
 --Se crean las tablas para el proyecto de Lenguajes de programaciÃ³n.
 --Creación de la tabla CLIENTE
+---Prueba de sincronización Github
+
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
 Telefono_Cliente varchar(10),
