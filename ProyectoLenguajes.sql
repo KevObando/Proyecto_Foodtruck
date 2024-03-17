@@ -11,29 +11,110 @@ ALTER TABLE CLIENTE
 add primary key (ID_Cliente);
 
 
-DROP TABLE EMPLEADO;
-
 -- Crear la tabla EMPLEADO
 CREATE TABLE EMPLEADO (
     ID_Empleado INT PRIMARY KEY,
     Nombre_Empleado VARCHAR2(80),
     Apellido_Empleado  VARCHAR2(80),
     Tipo_Empleado VARCHAR2(20),
-    Contrase?a VARCHAR2(20)
+    Contraseña VARCHAR2(20)
 );
 
-CREATE TABLE EMPLEADO_FUNCIONES
---ID_Empleado INT FOREING KEY,     hacer inner join de la tabla empleado con empleado_funciones
-ID_Empleado_Funciones INT PRIMARY KEY,
-Funciones VARCHAR(50);
+ALTER TABLE EMPLEADO
+ADD (
+    Horario VARCHAR2(80),
+   Asistencia CHAR(1) CHECK (Asistencia IN ('Y', 'N'))
+);
+
+--------- Tabla relacion Empleado_Funciones
+CREATE TABLE EMPLEADO_FUNCIONES(
+    ID_Empleado INT,
+    ID_Empleado_Funciones INT PRIMARY KEY,
+    Funciones VARCHAR(50),
+    FOREIGN KEY (ID_Empleado) REFERENCES EMPLEADO(ID_Empleado)
+);
 
 
 
-ALTER TABLE EMPLEADO      ---terminar alter table
-ADD HORARIO VARCHAR(50),
-ADD ASISTENCIA
-  
-     
+
+---Procedimiento almacenado para insertar registros a la tabla empleados      
+CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
+BEGIN
+  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+    VALUES (1, 'Antonio', 'Marin', 'Cocinero', 'Contrasena1', 'L-V 12md-9pm', 'Y');
+
+    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+    VALUES (2, 'María', 'Rodríguez', 'Cajera', 'Contrasena2', 'L-V 12md-9pm', 'Y');
+
+    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+    VALUES (3, 'Carlos', 'Morales', 'Ayudante', 'Contrasena3', 'L-V 12md-9pm', 'Y');
+
+    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+    VALUES (4, 'Ana', 'González', 'Cocinera', 'Contrasena4', 'L-V 12md-9pm', 'Y');
+
+    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+    VALUES (5, 'Fabian', 'Leal', 'Repartidor', 'Contrasena5', 'L-V 12md-9pm', 'Y');
+
+    COMMIT;
+
+  DBMS_OUTPUT.PUT_LINE('Los datos se han llenado correctamente.');
+END;
+/
+SET SERVEROUTPUT ON;
+Execute p_llenar_empleados;
+-----------------------------------------------------------------------
+
+---Procedimiento de consulta a la Tabla empleados
+
+CREATE OR REPLACE PROCEDURE p_consultar_empleados(k_cursor OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN k_cursor FOR SELECT * FROM EMPLEADO;
+END;
+/
+VAR my_cursor REFCURSOR;
+EXEC p_consultar_empleados(:my_cursor);
+PRINT my_cursor;
+
+
+----------------------------Procedimiento para llenar la tabla empleado funciones
+CREATE OR REPLACE PROCEDURE p_InsertarEmpleadoFunciones AS 
+BEGIN
+    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
+    VALUES (1, 101, 'Preparar comida');
+
+    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
+    VALUES (2, 102, 'Cobrar en caja');
+
+    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
+    VALUES (3, 103, 'Limpiar mesas');
+
+    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
+    VALUES (4, 104, 'Preparar bebidas');
+
+    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
+    VALUES (5, 105, 'Repartir pedidos');
+
+    COMMIT;
+END;
+/
+Execute p_InsertarEmpleadoFunciones;
+
+-------------------Procedimiento que crea un update a la tabla Empleado_funciones---------
+CREATE OR REPLACE PROCEDURE p_ActualizarEmpleadoFunciones AS 
+BEGIN
+    UPDATE empleado_funciones
+    SET Funciones = 'Administracion'
+    WHERE ID_Empleado = 2;
+
+    COMMIT;
+END ;
+/
+EXECUTE p_ActualizarEmpleadoFunciones;
+
+
+
+
+
 -------------------------------------------TRIGGERS-------------------------------------
 --- Trigger de insert y delete de la tabla empleado
 
@@ -60,7 +141,7 @@ BEGIN
     END IF;
 END;
 /
-
+---------------------------------------------------------------------------------------
 --- Trigger de update de la tabla empleado
 CREATE TABLE trg_empleado_Update (
     fecha_creacion     TIMESTAMP,
@@ -78,7 +159,7 @@ BEGIN
         VALUES (SYSTIMESTAMP, USER, USER, SYSTIMESTAMP, 'UPDATE');
 END;
 /
-
+---------------------------------------------------------------------------------------
 --------Triggers tabla cliente
 
 CREATE TABLE trg_cliente_Insercion_Eliminacion_update (
@@ -110,64 +191,7 @@ END;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
----Procedimiento almacenado para insertar registros a la tabla empleados      
-CREATE OR REPLACE PROCEDURE p_llenar_empleados AS
-BEGIN
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contrase?a)
-  VALUES (101, 'Jose', 'Perez', 'Cocinero', 'Contrasena1');
-
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contrase?a)
-  VALUES (102, 'Maria', 'Gonzales', 'Cajera', 'Contrasena2');
-
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contrase?a)
-  VALUES (103, 'Carlos', 'Martinez', 'Gerente', 'Contrasena3');
-
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contrase?a)
-  VALUES (104, 'Ana', 'Leal', 'Asistente', 'Contrasena4');
-
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contrase?a)
-  VALUES (105, 'Marcos', 'Zamora', 'Repartidor', 'Contrasena5');
-
-  COMMIT;
-  
-  DBMS_OUTPUT.PUT_LINE('Los datos se han llenado correctamente.');
-END;
-/
-SET SERVEROUTPUT ON;
-Execute p_llenar_empleados;
-
-
-
-
----Procedimiento de consulta a la Tabla empleados
-
-CREATE OR REPLACE PROCEDURE p_consultar_empleados(k_cursor OUT SYS_REFCURSOR) AS
-BEGIN
-  OPEN k_cursor FOR SELECT * FROM EMPLEADO;
-END;
-/
-VAR my_cursor REFCURSOR;
-EXEC p_consultar_empleados(:my_cursor);
-PRINT my_cursor;
-
-
+------------------------------------------------------------------------------
 -- Crear la tabla PRODUCTO
 CREATE TABLE PRODUCTO (
     ID_Producto INT PRIMARY KEY,
