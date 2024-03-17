@@ -77,41 +77,99 @@ PRINT my_cursor;
 
 
 ----------------------------Procedimiento para llenar la tabla empleado funciones
-CREATE OR REPLACE PROCEDURE p_InsertarEmpleadoFunciones AS 
+CREATE OR REPLACE PROCEDURE p_Insertar_Empleado_Funciones (
+  p_id_empleado INT,
+  p_id_empleado_funciones INT,
+  p_funciones VARCHAR2
+) IS
 BEGIN
-    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
-    VALUES (1, 101, 'Preparar comida');
+  INSERT INTO EMPLEADO_FUNCIONES (ID_Empleado, ID_Empleado_Funciones, Funciones)
+  VALUES (p_id_empleado, p_id_empleado_funciones, p_funciones);
 
-    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
-    VALUES (2, 102, 'Cobrar en caja');
-
-    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
-    VALUES (3, 103, 'Limpiar mesas');
-
-    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
-    VALUES (4, 104, 'Preparar bebidas');
-
-    INSERT INTO empleado_funciones (ID_Empleado, ID_Empleado_Funciones, Funciones)
-    VALUES (5, 105, 'Repartir pedidos');
-
-    COMMIT;
+  DBMS_OUTPUT.PUT_LINE('El registro se ha insertado correctamente.');
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error al insertar el registro: ' || SQLERRM);
 END;
+
 /
-Execute p_InsertarEmpleadoFunciones;
+
+Execute p_Insertar_Empleado_Funciones(1, 1, 'Preparar comida');
+
 
 -------------------Procedimiento que crea un update a la tabla Empleado_funciones---------
-CREATE OR REPLACE PROCEDURE p_ActualizarEmpleadoFunciones AS 
+CREATE OR REPLACE PROCEDURE p_actualizar_empleado_funciones (
+  p_id_empleado INT,
+  p_id_empleado_funciones INT,
+  p_funciones VARCHAR2
+) IS
 BEGIN
-    UPDATE empleado_funciones
-    SET Funciones = 'Administracion'
-    WHERE ID_Empleado = 2;
+  UPDATE EMPLEADO_FUNCIONES
+  SET Funciones = p_funciones,
+      ID_Empleado_Funciones = p_id_empleado_funciones
+  WHERE ID_Empleado = p_id_empleado;
 
-    COMMIT;
-END ;
+  DBMS_OUTPUT.PUT_LINE('El registro se ha actualizado correctamente.');
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error al actualizar el registro: ' || SQLERRM);
+END;
+
+
+// Se ingresa el ID del empleado, ID_de la funcion y la nueva funcion del personal para actualizacion
+Execute p_actualizar_empleado_funciones(1, 106, 'Preparar alimentos');
+
+
+
+------------------Procedimiento almacenado que hace un delete a la tabla Empleado_funciones---------------
+CREATE OR REPLACE PROCEDURE eliminar_empleado_funciones (p_id_empleado_funciones INT)
+IS
+BEGIN
+  DELETE FROM EMPLEADO_FUNCIONES
+  WHERE ID_Empleado = p_id_empleado_funciones;
+
+  DBMS_OUTPUT.PUT_LINE('Los registros se han borrado correctamente.');
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error al borrar los registros: ' || SQLERRM);
+END;
+
+------Ejecuta el procedimiento solicitando el ID del empleado----------
+Execute eliminar_empleado_funciones(1);
+----------------------------------------------------------------------------------------------------------
+
+
+
+----------------Procedimientos para ver la tabla empleado_funciones--------
+CREATE OR REPLACE PROCEDURE visualizar_empleado_funciones (k_cursor OUT SYS_REFCURSOR)
+IS
+BEGIN
+  OPEN k_cursor FOR
+    SELECT * FROM EMPLEADO_FUNCIONES;
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error al visualizar los datos: ' || SQLERRM);
+END;
 /
-EXECUTE p_ActualizarEmpleadoFunciones;
+-----Procedimeinto para consultar la tabla Empleadofunciones---
+CREATE OR REPLACE PROCEDURE imprimir_empleado_funciones IS
+  v_cursor SYS_REFCURSOR;
+  v_info EMPLEADO_FUNCIONES%ROWTYPE;
+BEGIN
+  visualizar_empleado_funciones(v_cursor);
+  LOOP
+    FETCH v_cursor INTO v_info;
+    EXIT WHEN v_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('ID_Empleado: ' || v_info.ID_Empleado || ', ID_Empleado_Funciones: ' || v_info.ID_Empleado_Funciones || ', Funciones: ' || v_info.Funciones);
+  END LOOP;
+  CLOSE v_cursor;
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error al imprimir los datos: ' || SQLERRM);
+END;
 
-
+--- Se ejecuta la visualizacion de tablas---
+execute imprimir_empleado_funciones;
 
 
 
