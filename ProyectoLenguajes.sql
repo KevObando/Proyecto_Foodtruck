@@ -87,10 +87,11 @@ CREATE TABLE PEDIDO_PRODUCTO (
 CREATE OR REPLACE PACKAGE PKG_EMPLEADO AS
   PROCEDURE sp_llenar_empleados;
   PROCEDURE sp_consultar_empleados(k_cursor OUT SYS_REFCURSOR);
-  PROCEDURE sp_InsertarEmpleadoFunciones;
-  PROCEDURE sp_ActualizarEmpleadoFunciones;
+  PROCEDURE sp_InsertarEmpleadoFunciones(p_id_empleado INT, p_id_empleado_funciones INT, p_funciones VARCHAR2);
+  PROCEDURE sp_ActualizarEmpleadoFunciones(p_id_empleado_funciones INT);
   PROCEDURE sp_Eliminar_Empleado;
 END PKG_EMPLEADO;
+
 /
 
 CREATE OR REPLACE PACKAGE BODY PKG_EMPLEADO AS
@@ -124,7 +125,7 @@ BEGIN
   END sp_consultar_empleados;
 
   -- Procedimiento para llenar la tabla empleado funciones
-  PROCEDURE sp_InsertarEmpleadoFunciones AS 
+ PROCEDURE sp_InsertarEmpleadoFunciones(p_id_empleado INT, p_id_empleado_funciones INT, p_funciones VARCHAR2) AS 
 BEGIN
   INSERT INTO EMPLEADO_FUNCIONES (ID_Empleado, ID_Empleado_Funciones, Funciones)
   VALUES (p_id_empleado, p_id_empleado_funciones, p_funciones);
@@ -133,33 +134,11 @@ BEGIN
 EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('Error al insertar el registro: ' || SQLERRM);
-END;
+END sp_InsertarEmpleadoFunciones;
 
-/
-
-Execute p_Insertar_Empleado_Funciones(1, 1, 'Preparar comida');
-
-
--------------------Procedimiento que crea un update a la tabla Empleado_funciones---------
-CREATE OR REPLACE PROCEDURE p_actualizar_empleado_funciones (
-  p_id_empleado INT,
-  p_id_empleado_funciones INT,
-  p_funciones VARCHAR2
-) IS
-BEGIN
-  UPDATE EMPLEADO_FUNCIONES
-  SET Funciones = p_funciones,
-      ID_Empleado_Funciones = p_id_empleado_funciones
-  WHERE ID_Empleado = p_id_empleado;
-
-  DBMS_OUTPUT.PUT_LINE('El registro se ha actualizado correctamente.');
-EXCEPTION
-  WHEN OTHERS THEN
-    DBMS_OUTPUT.PUT_LINE('Error al actualizar el registro: ' || SQLERRM);
-  END sp_InsertarEmpleadoFunciones;
 
   -- Procedimiento que actualiza registros en la tabla Empleado_funciones
-  PROCEDURE sp_ActualizarEmpleadoFunciones AS 
+PROCEDURE sp_ActualizarEmpleadoFunciones(p_id_empleado_funciones INT) AS 
 BEGIN
   DELETE FROM EMPLEADO_FUNCIONES
   WHERE ID_Empleado = p_id_empleado_funciones;
@@ -168,7 +147,7 @@ BEGIN
 EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('Error al borrar los registros: ' || SQLERRM);
-  END sp_ActualizarEmpleadoFunciones;
+END sp_ActualizarEmpleadoFunciones;
 
   -- Procedimiento para eliminar empleado
   PROCEDURE sp_Eliminar_Empleado AS
