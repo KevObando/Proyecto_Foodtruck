@@ -166,7 +166,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_CLIENTES AS
         v_apellido_cliente CLIENTE.Apellido_Cliente%TYPE;
         v_direccion_cliente CLIENTE.Direccion_Cliente%TYPE;
     BEGIN
-        OPEN c_cursor FOR SELECT * FROM CLIENTE;
+        OPEN c_cursor FOR SELECT ID_Cliente, Telefono_Cliente, Nombre_Cliente, Apellido_Cliente, Direccion_Cliente FROM CLIENTE;
         DBMS_OUTPUT.PUT_LINE('Lista de Clientes:');
         DBMS_OUTPUT.PUT_LINE('------------------');
         LOOP
