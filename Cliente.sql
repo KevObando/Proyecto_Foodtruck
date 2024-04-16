@@ -174,10 +174,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_CLIENTES AS
             EXIT WHEN c_cursor%NOTFOUND;
             -- Imprimir los datos de cada cliente en formato de lista
             DBMS_OUTPUT.PUT_LINE('- ID: ' || v_id_cliente);
-            DBMS_OUTPUT.PUT_LINE('  Teléfono: ' || v_telefono_cliente);
+            DBMS_OUTPUT.PUT_LINE('  Telefono: ' || v_telefono_cliente);
             DBMS_OUTPUT.PUT_LINE('  Nombre: ' || v_nombre_cliente);
             DBMS_OUTPUT.PUT_LINE('  Apellido: ' || v_apellido_cliente);
-            DBMS_OUTPUT.PUT_LINE('  Dirección: ' || v_direccion_cliente);
+            DBMS_OUTPUT.PUT_LINE('  Direccion: ' || v_direccion_cliente);
             DBMS_OUTPUT.PUT_LINE('');
         END LOOP;
         CLOSE c_cursor;
