@@ -10,6 +10,11 @@ Direccion_Cliente varchar(100));
 ALTER TABLE CLIENTE
 add primary key (ID_Cliente);
 
+-- Se modifica la longitud de ID_Cliente
+ALTER TABLE CLIENTE
+MODIFY (ID_Cliente NUMBER(3,0));
+
+
 //ALTER PARA AGREGAR ESPACIOS DE LOG (RECOMENDACION)
 
 ALTER TABLE CLIENTE
