@@ -37,6 +37,7 @@ CREATE OR REPLACE PROCEDURE sp_REALIZAR_PEDIDO (
 )
 AS
 BEGIN
+
     -- Insertar el pedido
     INSERT INTO PEDIDO (ID_Pedido, Estado_Pedido, Monto_Total, Fecha, ID_Cliente, ID_Empleado)
     VALUES (SEQ_PEDIDO.NEXTVAL, p_Estado_Pedido, p_Monto_Total, p_Fecha, p_ID_Cliente, p_ID_Empleado);
@@ -82,11 +83,27 @@ EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Error al insertar los productos del pedido: ' || SQLERRM);
 END sp_producto_pedido;
+
+
 /
+SET SERVEROUTPUT ON
 EXEC sp_producto_pedido(1, 1, 2);
 /
 
+CREATE OR REPLACE VIEW vista_pedido AS
+SELECT 
+    ID_Pedido,
+    Estado_Pedido,
+    Monto_total,
+    Fecha,
+    ID_Cliente,
+    ID_Empleado
+FROM PEDIDO;
+/
 
+
+
+SELECT * FROM vista_pedido;
 
 select * from producto;
 select * from pedido;
