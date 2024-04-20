@@ -40,7 +40,7 @@ BEGIN
     -- Insertar el pedido
     INSERT INTO PEDIDO (ID_Pedido, Estado_Pedido, Monto_Total, Fecha, ID_Cliente, ID_Empleado)
     VALUES (SEQ_PEDIDO.NEXTVAL, p_Estado_Pedido, p_Monto_Total, p_Fecha, p_ID_Cliente, p_ID_Empleado);
-    
+    COMMIT;
     DBMS_OUTPUT.PUT_LINE('Pedido insertado satisfactoriamente');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
@@ -52,7 +52,39 @@ END sp_REALIZAR_PEDIDO;
 
 -- Invocar el procedimiento almacenado con valores de ejemplo
 EXEC sp_REALIZAR_PEDIDO('Activo', 2000, SYSDATE, 101, 1);
+EXEC sp_REALIZAR_PEDIDO('Activo', 3000, SYSDATE, 102, 3);
 
 select * from pedido;
 select * from cliente;
 select * from empleado;
+
+
+--secuencia para el id de la tabla pedido_producto
+CREATE SEQUENCE SEQ_Pedido_Producto
+START WITH 1
+INCREMENT BY 1;
+/
+
+
+
+CREATE OR REPLACE PROCEDURE sp_producto_pedido(
+p_ID_Pedido IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
+p_ID_Producto IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
+p_Cantidad IN PEDIDO_PRODUCTO.Cantidad%TYPE )
+AS
+BEGIN
+    -- Insertar el producto y la cantidad
+    INSERT INTO PEDIDO_PRODUCTO (Id_Pedido_Producto, ID_Pedido, ID_Producto, Cantidad)
+    VALUES (SEQ_Pedido_Producto.NEXTVAL, p_ID_Pedido, p_ID_Producto, p_Cantidad);
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Pedido insertado satisfactoriamente');
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ID de la compra está repetido.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error al insertar los productos del pedido: ' || SQLERRM);
+END sp_producto_pedido;
+
+
+
+

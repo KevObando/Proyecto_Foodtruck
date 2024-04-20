@@ -74,9 +74,11 @@ CREATE TABLE COMPRA (
 /
 -- Crear la tabla PEDIDO-PRODUCTO
 CREATE TABLE PEDIDO_PRODUCTO (
+    ID_Pedido_Producto int,
     ID_Pedido INT,
     ID_Producto INT,
-    PRIMARY KEY (ID_Pedido, ID_Producto),
+    Cantidad int,
+    PRIMARY KEY (ID_Pedido_Producto),
     FOREIGN KEY (ID_Pedido) REFERENCES PEDIDO(ID_Pedido),
     FOREIGN KEY (ID_Producto) REFERENCES PRODUCTO(ID_Producto)
 );
