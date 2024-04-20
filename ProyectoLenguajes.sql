@@ -342,7 +342,69 @@ BEGIN
 END;
 /
 
+------------------VISTAS----------
+------Vistas de la tabla empleado
+CREATE OR REPLACE VIEW vista_empleado AS
+SELECT 
+    ID_Empleado,
+    Nombre_Empleado,
+    Apellido_Empleado,
+    Tipo_Empleado,
+    Horario
+FROM EMPLEADO;
+/
 
+--vista materializada de la tabla empleado
+CREATE MATERIALIZED VIEW mv_empleado
+BUILD IMMEDIATE
+REFRESH COMPLETE
+AS
+SELECT 
+    ID_Empleado,
+    Nombre_Empleado,
+    Apellido_Empleado,
+    Tipo_Empleado
+FROM EMPLEADO;
+/
+
+--vista de la tabla cliente
+CREATE OR REPLACE VIEW vista_cliente AS
+SELECT 
+    ID_Cliente,
+    Telefono_Cliente,
+    Nombre_Cliente,
+    Direccion_Cliente
+FROM CLIENTE;
+/
+
+--vista de la tabla compra
+CREATE OR REPLACE VIEW vista_compra AS
+SELECT 
+    ID_Compra,
+    ID_Pedido,
+    Productos_Comprados
+FROM COMPRA;
+/
+
+--vista de la tabla empleado funciones
+CREATE OR REPLACE VIEW vista_empleado_funciones AS
+SELECT 
+    ID_Empleado,
+    ID_Empleado_Funciones,
+    Funciones
+FROM EMPLEADO_FUNCIONES;
+
+--vista de la tabla pedido
+CREATE OR REPLACE VIEW vista_pedido AS
+SELECT 
+    ID_Pedido,
+    Estado_Pedido,
+    Monto_total,
+    Fecha,
+    ID_Cliente,
+    ID_Empleado
+FROM PEDIDO;
+/
 
 
 
