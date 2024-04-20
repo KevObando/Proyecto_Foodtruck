@@ -1,5 +1,5 @@
 ---Módulo compras-----
-
+SET SERVEROUTPUT ON
 CREATE TABLE PEDIDO (
     ID_Pedido INT PRIMARY KEY,
     Estado_Pedido VARCHAR2(20),
@@ -8,6 +8,13 @@ CREATE TABLE PEDIDO (
     ID_Cliente Number(2,0),
     ID_Empleado INT
     );
+
+ALTER TABLE PEDIDO
+MODIFY (Monto_total INT);
+
+ALTER TABLE PEDIDO
+MODIFY (ID_Cliente INT);
+
 
 --Creación de las tablas foráneas para la tabla PEDIDO
 ALTER TABLE PEDIDO
@@ -37,6 +44,7 @@ CREATE OR REPLACE PROCEDURE sp_REALIZAR_PEDIDO (
 )
 AS
 BEGIN
+
     -- Insertar el pedido
     INSERT INTO PEDIDO (ID_Pedido, Estado_Pedido, Monto_Total, Fecha, ID_Cliente, ID_Empleado)
     VALUES (SEQ_PEDIDO.NEXTVAL, p_Estado_Pedido, p_Monto_Total, p_Fecha, p_ID_Cliente, p_ID_Empleado);
@@ -54,9 +62,7 @@ END sp_REALIZAR_PEDIDO;
 EXEC sp_REALIZAR_PEDIDO('Activo', 2000, SYSDATE, 101, 1);
 EXEC sp_REALIZAR_PEDIDO('Activo', 3000, SYSDATE, 102, 3);
 
-select * from pedido;
-select * from cliente;
-select * from empleado;
+
 
 
 --secuencia para el id de la tabla pedido_producto
@@ -66,7 +72,7 @@ INCREMENT BY 1;
 /
 
 
-
+---procedimiento para relacionar los pedidos con los productos que compró
 CREATE OR REPLACE PROCEDURE sp_producto_pedido(
 p_ID_Pedido IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
 p_ID_Producto IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
@@ -86,5 +92,26 @@ EXCEPTION
 END sp_producto_pedido;
 
 
+/
+
+EXEC sp_producto_pedido(43, 1, 2);
+/
+
+CREATE OR REPLACE VIEW vista_pedido AS
+SELECT 
+    ID_Pedido,
+    Estado_Pedido,
+    Monto_total,
+    Fecha,
+    ID_Cliente,
+    ID_Empleado
+FROM PEDIDO;
+/
 
 
+SELECT * FROM vista_pedido;
+
+select * from producto;
+select * from pedido;
+select * from cliente;
+select * from empleado;
