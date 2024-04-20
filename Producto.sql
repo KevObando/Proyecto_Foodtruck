@@ -26,6 +26,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_Producto AS
             DBMS_OUTPUT.PUT_LINE('Error al insertar el producto: ' || SQLERRM);
     END sp_inserta_producto;
     
+   
+    
     PROCEDURE sp_actualiza_producto(p_id_producto INT, p_descripcion VARCHAR2, p_disponibilidad VARCHAR2, p_precio NUMBER) AS
     BEGIN
         UPDATE Producto
@@ -60,6 +62,10 @@ END PKG_Producto;
 
 -- Llamar al procedimiento sp_agregar_producto
 BEGIN
+
+    PKG_Producto.sp_inserta_producto('Refresco natural', 'Disponible', 1500);
+    PKG_Producto.sp_inserta_producto('Refresco gaseoso', 'Disponible', 1200);
+    PKG_Producto.sp_inserta_producto('Botella con agua', 'Disponible', 800);
     PKG_Producto.sp_inserta_producto('Sandwich', 'Disponible', 3500);
     PKG_Producto.sp_inserta_producto('Taco', 'Disponible', 2800);
     PKG_Producto.sp_inserta_producto('Chalupa', 'Disponible', 4000);
@@ -67,6 +73,7 @@ BEGIN
     PKG_Producto.sp_inserta_producto('Pizza personal', 'Disponible', 2500);
 END;
 /
+
 
 --Llamar al procedimiento sp_actualiza_producto
 BEGIN
