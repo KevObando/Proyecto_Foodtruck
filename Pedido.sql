@@ -54,9 +54,7 @@ END sp_REALIZAR_PEDIDO;
 EXEC sp_REALIZAR_PEDIDO('Activo', 2000, SYSDATE, 101, 1);
 EXEC sp_REALIZAR_PEDIDO('Activo', 3000, SYSDATE, 102, 3);
 
-select * from pedido;
-select * from cliente;
-select * from empleado;
+
 
 
 --secuencia para el id de la tabla pedido_producto
@@ -66,7 +64,7 @@ INCREMENT BY 1;
 /
 
 
-
+---procedimiento para relacionar los pedidos con los productos que compró
 CREATE OR REPLACE PROCEDURE sp_producto_pedido(
 p_ID_Pedido IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
 p_ID_Producto IN PEDIDO_PRODUCTO.ID_Pedido%TYPE,
@@ -84,7 +82,13 @@ EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Error al insertar los productos del pedido: ' || SQLERRM);
 END sp_producto_pedido;
+/
+EXEC sp_producto_pedido(1, 1, 2);
+/
 
 
 
-
+select * from producto;
+select * from pedido;
+select * from cliente;
+select * from empleado;
