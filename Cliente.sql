@@ -1,6 +1,8 @@
 //MODULO DE CLIENTE
 //Prueba git
 //TABLA
+SET SERVEROUTPUT ON;
+
 CREATE TABLE CLIENTE(
 ID_Cliente Number(2,0),
 Telefono_Cliente varchar(10),

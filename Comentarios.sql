@@ -178,3 +178,27 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMENTARIOS AS
     END insertar_comentario;
 END PKG_COMENTARIOS;
 /
+-- Llamar al procedimiento para leer los comentarios de un cliente
+BEGIN
+    PKG_COMENTARIOS.leer_comentario(1); -- Reemplaza 1 con el ID_Cliente cuyos comentarios deseas leer
+END;
+/
+
+-- Llamar al procedimiento para actualizar un comentario
+BEGIN
+    PKG_COMENTARIOS.actualizar_comentario(1, 'Este es un nuevo comentario'); -- Reemplaza 1 con el ID_Comentario que deseas actualizar y 'Este es un nuevo comentario' con el nuevo comentario
+END;
+/
+
+-- Llamar al procedimiento para eliminar un comentario
+BEGIN
+    PKG_COMENTARIOS.eliminar_comentario(1); -- Reemplaza 1 con el ID_Comentario que deseas eliminar
+END;
+/
+
+-- Llamar al procedimiento para hacer un comentario
+BEGIN
+    PKG_COMENTARIOS.hacer_comentario(1, 'Este es un comentario', 5); -- Reemplaza 1 con el ID_Cliente que hace el comentario, 'Este es un comentario' con el comentario y 5 con la calificación
+END;
+/
+
