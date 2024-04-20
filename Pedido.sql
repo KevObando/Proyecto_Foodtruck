@@ -94,7 +94,7 @@ END sp_producto_pedido;
 
 /
 
-EXEC sp_producto_pedido(1, 1, 2);
+EXEC sp_producto_pedido(43, 1, 2);
 /
 
 CREATE OR REPLACE VIEW vista_pedido AS
