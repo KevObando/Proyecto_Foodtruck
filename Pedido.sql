@@ -1,5 +1,5 @@
 ---Módulo compras-----
-
+SET SERVEROUTPUT ON
 CREATE TABLE PEDIDO (
     ID_Pedido INT PRIMARY KEY,
     Estado_Pedido VARCHAR2(20),
@@ -8,6 +8,13 @@ CREATE TABLE PEDIDO (
     ID_Cliente Number(2,0),
     ID_Empleado INT
     );
+
+ALTER TABLE PEDIDO
+MODIFY (Monto_total INT);
+
+ALTER TABLE PEDIDO
+MODIFY (ID_Cliente INT);
+
 
 --Creación de las tablas foráneas para la tabla PEDIDO
 ALTER TABLE PEDIDO
@@ -86,7 +93,7 @@ END sp_producto_pedido;
 
 
 /
-SET SERVEROUTPUT ON
+
 EXEC sp_producto_pedido(1, 1, 2);
 /
 
@@ -100,7 +107,6 @@ SELECT
     ID_Empleado
 FROM PEDIDO;
 /
-
 
 
 SELECT * FROM vista_pedido;
