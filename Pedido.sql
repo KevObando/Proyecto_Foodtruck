@@ -1,13 +1,5 @@
 ---Módulo compras-----
 SET SERVEROUTPUT ON
-CREATE TABLE PEDIDO (
-    ID_Pedido INT PRIMARY KEY,
-    Estado_Pedido VARCHAR2(20),
-    Monto_total NUMBER(10, 2),
-    Fecha DATE,
-    ID_Cliente Number(2,0),
-    ID_Empleado INT
-    );
 
 ALTER TABLE PEDIDO
 MODIFY (Monto_total INT);
@@ -16,11 +8,7 @@ ALTER TABLE PEDIDO
 MODIFY (ID_Cliente INT);
 
 
---Creación de las tablas foráneas para la tabla PEDIDO
-ALTER TABLE PEDIDO
-ADD CONSTRAINT pk_id_cliente
-FOREIGN KEY (ID_Cliente)
-REFERENCES CLIENTE (ID_Cliente);
+
 
 ALTER TABLE PEDIDO
 ADD CONSTRAINT pk_id_empleado

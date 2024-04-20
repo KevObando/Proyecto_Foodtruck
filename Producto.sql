@@ -85,4 +85,16 @@ END;
 BEGIN
     PKG_Producto.sp_elimina_producto(5);
 END;
-/    
+/ 
+
+---vista para visualizar la tabla producto
+CREATE OR REPLACE VIEW vista_producto AS
+SELECT 
+    ID_Producto,
+    Descripcion,
+    Disponibilidad,
+    Precio
+FROM PRODUCTO;
+/
+
+select * from vista_producto;
