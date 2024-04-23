@@ -1,5 +1,4 @@
 //MODULO DE CLIENTE
-//Prueba git
 //TABLA
 SET SERVEROUTPUT ON;
 

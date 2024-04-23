@@ -1,4 +1,5 @@
 -- Crear la tabla COMENTARIOS
+
 CREATE TABLE COMENTARIOS (
     ID_Comentario INT PRIMARY KEY,
     ID_Cliente Number(3,0),

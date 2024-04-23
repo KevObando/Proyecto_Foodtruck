@@ -1,4 +1,19 @@
 -- Módulo productos
+-- Crear la tabla PRODUCTO
+CREATE TABLE PRODUCTO (
+    ID_Producto INT PRIMARY KEY,
+    Descripcion VARCHAR2(80),
+    Disponibilidad VARCHAR2(10),
+    Precio NUMBER(10, 2)
+);
+
+
+
+
+
+
+
+
 -- Creación del paquete del módulo producto
 CREATE OR REPLACE PACKAGE PKG_Producto AS
     PROCEDURE sp_inserta_producto(p_descripcion VARCHAR2, p_disponibilidad VARCHAR2, p_precio NUMBER);
