@@ -87,7 +87,15 @@ CREATE TABLE PEDIDO_PRODUCTO (
 ------------------------PROCEDIMIENTOS ALMACENADOS---------------------------------
 -- Creación del paquete EMPLEADO
 CREATE OR REPLACE PACKAGE PKG_EMPLEADO AS
-  PROCEDURE sp_llenar_empleados;
+   PROCEDURE sp_llenar_empleados (
+        p_ID_Empleado IN EMPLEADO.ID_Empleado%TYPE,
+        p_Nombre_Empleado IN EMPLEADO.Nombre_Empleado%TYPE,
+        p_Apellido_Empleado IN EMPLEADO.Apellido_Empleado%TYPE,
+        p_Tipo_Empleado IN EMPLEADO.Tipo_Empleado%TYPE,
+        p_Contraseña IN EMPLEADO.Contraseña%TYPE,
+        p_Horario IN EMPLEADO.Horario%TYPE,
+        p_Asistencia IN EMPLEADO.Asistencia%TYPE
+    );
   PROCEDURE sp_consultar_empleados(k_cursor OUT SYS_REFCURSOR);
   PROCEDURE sp_InsertarEmpleadoFunciones(p_id_empleado INT, p_id_empleado_funciones INT, p_funciones VARCHAR2);
   PROCEDURE sp_ActualizarEmpleadoFunciones(p_id_empleado_funciones INT);
@@ -98,27 +106,25 @@ END PKG_EMPLEADO;
 
 CREATE OR REPLACE PACKAGE BODY PKG_EMPLEADO AS
   -- Procedimiento almacenado para insertar registros a la tabla empleados
-  PROCEDURE sp_llenar_empleados AS
-BEGIN
-  INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
-    VALUES (1, 'Antonio', 'Marin', 'Cocinero', 'Contrasena1', 'L-V 12md-9pm', 'Y');
-
-    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
-    VALUES (2, 'María', 'Rodríguez', 'Cajera', 'Contrasena2', 'L-V 12md-9pm', 'Y');
-
-    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
-    VALUES (3, 'Carlos', 'Morales', 'Ayudante', 'Contrasena3', 'L-V 12md-9pm', 'Y');
-
-    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
-    VALUES (4, 'Ana', 'González', 'Cocinera', 'Contrasena4', 'L-V 12md-9pm', 'Y');
-
-    INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
-    VALUES (5, 'Fabian', 'Leal', 'Repartidor', 'Contrasena5', 'L-V 12md-9pm', 'Y');
-
-    COMMIT;
-
-  DBMS_OUTPUT.PUT_LINE('Los datos se han llenado correctamente.');
-  END sp_llenar_empleados;
+  PROCEDURE sp_llenar_empleados (
+        p_ID_Empleado IN EMPLEADO.ID_Empleado%TYPE,
+        p_Nombre_Empleado IN EMPLEADO.Nombre_Empleado%TYPE,
+        p_Apellido_Empleado IN EMPLEADO.Apellido_Empleado%TYPE,
+        p_Tipo_Empleado IN EMPLEADO.Tipo_Empleado%TYPE,
+        p_Contraseña IN EMPLEADO.Contraseña%TYPE,
+        p_Horario IN EMPLEADO.Horario%TYPE,
+        p_Asistencia IN EMPLEADO.Asistencia%TYPE
+    ) IS
+    BEGIN
+        INSERT INTO EMPLEADO (ID_Empleado, Nombre_Empleado, Apellido_Empleado, Tipo_Empleado, Contraseña, Horario, Asistencia)
+        VALUES (p_ID_Empleado, p_Nombre_Empleado, p_Apellido_Empleado, p_Tipo_Empleado, p_Contraseña, p_Horario, p_Asistencia);
+        COMMIT;
+        DBMS_OUTPUT.PUT_LINE('Empleado agregado exitosamente.');
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE;
+    END sp_llenar_empleados;
 
   -- Procedimiento de consulta a la Tabla empleados
   PROCEDURE sp_consultar_empleados(k_cursor OUT SYS_REFCURSOR) AS
